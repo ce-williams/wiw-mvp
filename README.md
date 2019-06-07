@@ -1,2 +1,0 @@
-# wiw-mvp
-Scheduler MVP

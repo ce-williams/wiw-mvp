@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <title>All Shifts</title>
+    <!-- jQuery & Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+   
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>All Shifts</h1>
+            <h3>See upcoming shifts below</h3>
+            <hr>
+            <a href="/"><button class="btn btn-primary" id="view-all-btn">Create New</button></a>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Start Shift</th>
+                    <th scope="col">End Shift</th>
+                </tr>
+            </thead>
+            <tbody id="shift-rows">
+
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        $.get("/api/shifts", function (data) {
+            for (var i = 0; i < data.length; i++) {
+                var shiftRows = $("<tr>");
+                shiftRows.addClass("well");
+                shiftRows.attr("id", "shift-item-" + i);
+                $("#shift-rows").append(shiftRows);
+
+                $("#shift-item-" + i).append("<td>" + "*" + "</td>");
+                $("#shift-item-" + i).append("<td>" + data[i].firstName + "</td>");
+                $("#shift-item-" + i).append("<td>" + data[i].lastName + "</td>");
+                $("#shift-item-" + i).append("<td>" + data[i].startShift + "</td>");
+                $("#shift-item-" + i).append("<td>" + data[i].endShift + "</td>");
+            }
+        });
+    </script>
+
+</body>
+
+</html>

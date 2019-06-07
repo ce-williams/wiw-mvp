@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Create</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-range/4.0.2/moment-range.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+
+
+
+</head>
+
+<body>
+    <!-- <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script> -->
+
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Create a new shift</h1>
+            <h3>Use the input boxes below to select dates and times</h3>
+            <hr>
+            <a href="/all"><button class="btn btn-primary" id="view-all-btn">View All</button></a>
+        </div>
+
+
+
+
+        <form>
+            <div class="form-row">
+                <div class="col-md-4 mb-3">
+                    <label for="validationServer01">First name</label>
+                    <input type="text" class="form-control is-valid" id="validationServer01" placeholder="First name"
+                        value="" required>
+                    <div class="valid-feedback">
+
+                    </div>
+                    <hr>
+                </div class="form-row">
+                <div class="col-md-4 mb-3">
+                    <label for="validationServer02">Last name</label>
+                    <input type="text" class="form-control is-valid" id="validationServer02" placeholder="Last name"
+                        value="" required>
+                    <div class="valid-feedback">
+
+                    </div>
+                    <hr>
+
+                    <div class="container">
+                        <div class="form-row">
+                            <p>Start Shift</p>
+                            <div class='col-md-5'>
+                                <div class="form-group">
+                                    <div class='input-group date'>
+                                        <input type='text datetime-local' id='datetimepicker6'
+                                            class="form-control is-valid" required />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <p>End Shift</p>
+                            <div class='col-md-5'>
+                                <div class="form-group">
+                                    <div class='input-group date'>
+                                        <input type='text datetime-local' id='datetimepicker7'
+                                            class="form-control is-valid" required />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr>
+                    <button class="btn btn-primary" type="submit" id="create-shift-btn">
+                            Create Shift</button>
+
+                    <!-- <a href="/all"><button class="btn btn-primary" type="submit" id="create-shift-btn">Create
+                            Shift</button></a> -->
+
+        </form>
+
+    </div>
+
+    <script type="text/javascript">
+
+    
+
+        
+        // var shifts = require("../models/shifts")
+        // console.log(shifts);
+
+        // event handler selecting the submit button
+        $("#create-shift-btn").on("click", function (event) {
+            event.preventDefault();
+
+            var convertStart = $("#datetimepicker6").val();
+            // alert(convertStart)
+
+            var convertEnd = $("#datetimepicker7").val();
+
+            // console.log(convertEnd, convertStart)
+
+            var startShift = new Date(moment().format(convertStart, 'LLL'));
+            var endShift = new Date(moment().format(convertEnd, 'LLL'));
+
+            var newShift = {
+                id: 1 + Math.random(),
+                firstName: $("#validationServer01").val(),
+                lastName: $("#validationServer02").val(),
+                startShift: convertStart,
+                endShift: convertEnd
+            };
+
+            // var startN = new Date(newShift.startShift);
+            alert("Start: " + newShift.startShift);
+            alert("End: " + newShift.endShift);
+            
+            // var startN = new Date(newShift.startShift)
+            // var endN = new Date(newShift.endShift)
+
+            // if (startN < endN) {
+            //     alert("correct")
+            // } else {
+            //     alert("incorrect")
+            // }
+           
+            // $.get("/api/validate-start", startN, function(data) {
+            //         if (data) {
+            //             alert("invalid end")
+            //         }
+            //     });
+            // $.get("/api/validate-start", endN, function(data) {
+            //         if (data) {
+            //             alert("invalid start")
+            //         }
+            //     });
+
+
+
+
+
+            // Post if not overlaping
+            $.post("/api/new-shift", newShift)
+                .then(function (data) {
+                    // console.log(data);
+                    alert("Adding shift...");
+                    // console.log(convertEnd, convertStart)
+                });
+        });
+
+
+
+
+
+
+        $(function () {
+            $("#datetimepicker6").datetimepicker();
+            $("#datetimepicker7").datetimepicker({
+                useCurrent: false //Important! See issue #1075
+            });
+            $("#datetimepicker6").on("dp.change", function (e) {
+                $("#datetimepicker7").data("DateTimePicker").minDate(e.date);
+            });
+            $("#datetimepicker7").on("dp.change", function (e) {
+                $("#datetimepicker6").data("DateTimePicker").maxDate(e.date);
+            });
+        });
+    </script>
+
+</body>
+
+</html>
